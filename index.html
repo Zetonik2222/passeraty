@@ -148,20 +148,32 @@ label,.lbl{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spac
 .readout>*{position:relative}
 .big{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .big div{display:flex;flex-direction:column}
-.big .v{font-family:var(--f-display);font-weight:700;font-size:2.6rem;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 0 18px var(--glow)}
+.big .v{font-family:var(--f-display);font-weight:700;font-size:clamp(1.7rem,8.5vw,2.6rem);line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums;text-shadow:0 0 18px var(--glow)}
 .big .v.acc{color:var(--readout-acc);text-shadow:0 0 18px var(--glow)}
 .big .k,.small .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--readout-dim);margin-top:6px}
 .small{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border-top:1px solid rgba(255,255,255,.1);padding-top:14px}
 .small .v{font-family:var(--f-display);font-weight:600;font-size:1.2rem;font-variant-numeric:tabular-nums}
-@media (max-width:380px){.big .v{font-size:2.1rem}}
+
 .small div{display:flex;flex-direction:column;min-width:0}
 .copyrow{display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(255,255,255,.1);padding-top:14px}
 .copybtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--readout-ink);font:600 .95rem var(--f-body);cursor:pointer}
 .copybtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .copybtn:active{background:rgba(255,255,255,.14)}
-.copybtn.ok{border-color:var(--good);color:var(--good)}
+.copybtn.ok{border-color:var(--readout-ink);color:var(--readout-ink);background:rgba(255,255,255,.14)}
 .copybtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #copyTxt{width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.25);color:var(--readout-ink);font:.9rem/1.5 var(--f-body);padding:8px 10px;resize:none}
+.taxibox{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:14px}
+.taxibox .note{margin:0}
+.hint{font-size:.78rem;color:var(--muted)}
+.rates summary{cursor:pointer;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:4px 0}
+.rates summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.rates-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.rates-grid .inp input{font-size:1.05rem;padding:8px 8px}
+.rates-grid .inp span{padding:0 8px;font-size:.78rem}
+@media (max-width:440px){.rates-grid{grid-template-columns:1fr}}
+.brk{display:flex;flex-direction:column;gap:6px;border-top:1px solid rgba(255,255,255,.1);padding-top:14px;font-size:.92rem}
+.brk div{display:flex;justify-content:space-between;gap:12px;color:var(--readout-dim)}
+.brk div span:last-child{color:var(--readout-ink);font-family:var(--f-display);font-weight:600;font-size:1.1rem;font-variant-numeric:tabular-nums}
 .split{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:14px}
 .split .who{display:flex;flex-direction:column;gap:8px}
 .split .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--readout-dim)}
@@ -346,6 +358,32 @@ footer{font-size:.78rem;color:var(--muted);line-height:1.45;padding:0 4px}
     <div class="toggles">
       <label class="toggle"><input id="back" type="checkbox"><span>Tam aj späť</span></label>
       <label class="toggle"><input id="winter" type="checkbox"><span>Zima (+10 %)</span></label>
+      <label class="toggle"><input id="taxi" type="checkbox"><span>Taxi</span></label>
+    </div>
+    <div class="taxibox" id="taxiBox" hidden>
+      <p class="note">Režim taxi: ty neplatíš nič, cena sa rozdelí medzi pasažierov. K palivu sa pripočíta opotrebenie auta a tvoj čas.</p>
+      <div class="field">
+        <label for="tMin">Čas jazdy</label>
+        <div class="inp"><input id="tMin" type="text" inputmode="numeric" placeholder="odhad" autocomplete="off"><span>min</span></div>
+        <span class="hint" id="tMinHint">Prázdne = odhad pri priemere 60 km/h. Pri dlhej ceste ho prepíš podľa navigácie.</span>
+      </div>
+      <details class="rates">
+        <summary>Taxi sadzby</summary>
+        <div class="rates-grid">
+          <div class="field">
+            <label for="rWear">Opotrebenie auta</label>
+            <div class="inp"><input id="rWear" type="text" inputmode="decimal" value="0,10"><span>€/km</span></div>
+          </div>
+          <div class="field">
+            <label for="rTime">Môj čas</label>
+            <div class="inp"><input id="rTime" type="text" inputmode="decimal" value="0,05"><span>€/min</span></div>
+          </div>
+          <div class="field">
+            <label for="rBoard">Nástupné</label>
+            <div class="inp"><input id="rBoard" type="text" inputmode="decimal" value="0"><span>€/osoba</span></div>
+          </div>
+        </div>
+      </details>
     </div>
     <div class="row">
       <div class="field">
@@ -393,9 +431,15 @@ footer{font-size:.78rem;color:var(--muted);line-height:1.45;padding:0 4px}
       <div><span class="v" id="o4">–</span><span class="k" id="k4">Na 100 km</span></div>
       <div><span class="v" id="o5">–</span><span class="k">Dojazd z 62 l</span></div>
     </div>
+    <div class="brk" id="brk" hidden>
+      <div><span>Palivo</span><span id="bFuel">–</span></div>
+      <div><span>Opotrebenie auta</span><span id="bWear">–</span></div>
+      <div><span id="bTimeK">Môj čas</span><span id="bTime">–</span></div>
+      <div id="bBoardRow"><span>Nástupné</span><span id="bBoard">–</span></div>
+    </div>
     <div class="split" id="split">
       <div class="who">
-        <span class="k">Počet osôb</span>
+        <span class="k" id="pLbl">Počet osôb</span>
         <div class="stepper">
           <button type="button" id="pMinus" aria-label="Menej osôb">−</button>
           <span id="pCount" aria-live="polite">1</span>
@@ -403,7 +447,7 @@ footer{font-size:.78rem;color:var(--muted);line-height:1.45;padding:0 4px}
         </div>
       </div>
       <p class="k paxnote" id="paxNote" hidden></p>
-      <div class="per" id="perBox" hidden><span class="v acc" id="perV">–</span><span class="k">na osobu</span></div>
+      <div class="per" id="perBox" hidden><span class="v acc" id="perV">–</span><span class="k" id="perK">na osobu</span></div>
     </div>
     <div class="copyrow" id="copyRow" hidden>
       <button type="button" id="copyBtn" class="copybtn">
@@ -446,6 +490,10 @@ footer{font-size:.78rem;color:var(--muted);line-height:1.45;padding:0 4px}
     // distance and the two checkboxes always start empty
     ids.forEach(function(i){if(i!=="km"&&saved[i]!=null)$(i).value=saved[i]});
   }catch(e){}
+  // taxi rates are remembered; taxi itself, time and distance always start empty
+  var rateIds=["rWear","rTime","rBoard"];
+  try{var sr=JSON.parse(localStorage.getItem("passeraty-taxi-sadzby")||"{}");rateIds.forEach(function(i){if(sr[i]!=null)$(i).value=sr[i]})}catch(e){}
+  function saveRates(){try{var o={};rateIds.forEach(function(i){o[i]=$(i).value});localStorage.setItem("passeraty-taxi-sadzby",JSON.stringify(o))}catch(e){}}
   function save(){try{var o={};ids.forEach(function(i){o[i]=$(i).value});o.back=$("back").checked;o.winter=$("winter").checked;
     localStorage.setItem("k4-spotreba",JSON.stringify(o))}catch(e){}}
 
@@ -461,6 +509,16 @@ footer{font-size:.78rem;color:var(--muted);line-height:1.45;padding:0 4px}
   function tripMessage(){
     if(!(lastCost>0)||!lastTrip)return "";
     var t=lastTrip,lines=[];
+    if(t.taxi){
+      lines.push("🚕 Odvoz: "+fmt(t.km,0)+" km"+(t.back?" (tam aj späť)":""));
+      lines.push("⛽ Palivo: "+fmt(t.fuel,2)+" €");
+      lines.push("🔧 Opotrebenie auta: "+fmt(t.wear,2)+" €");
+      lines.push("⏱️ Čas šoféra ("+fmt(t.min,0)+" min): "+fmt(t.time,2)+" €");
+      if(t.board>0)lines.push("🎫 Nástupné: "+fmt(t.board,2)+" €");
+      lines.push("💶 Spolu: "+fmt(lastCost,2)+" €");
+      lines.push("👥 Na pasažiera ("+persons+(persons===1?" pasažier":persons>=5?" pasažierov":" pasažieri")+"): "+fmt(perTaxi(),2)+" €");
+      return lines.join("\n");
+    }
     lines.push("🚗 Cesta: "+fmt(t.km,0)+" km"+(t.back?" (tam aj späť)":""));
     lines.push("⛽ Palivo: "+fmt(t.l,1)+" l × "+fmt(t.pr,3)+" €/l");
     lines.push("💶 Spolu: "+fmt(lastCost,2)+" €");
@@ -476,14 +534,25 @@ footer{font-size:.78rem;color:var(--muted);line-height:1.45;padding:0 4px}
       if(ok)done();else $("copyLbl").textContent="Podrž prst na texte a vyber Kopírovať"};
     try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done,fallback);else fallback()}catch(e){fallback()}
   });
+  function isTaxi(){return $("taxi").checked}
+  function perTaxi(){return Math.ceil(lastCost/persons*2-1e-9)/2}   // nahor na 0,50 €
   function renderSplit(){
+    var taxi=isTaxi();
     $("split").hidden=mode!=="trip";$("copyRow").hidden=!(mode==="trip"&&lastCost>0);
-    $("pCount").textContent=persons;$("pMinus").disabled=persons<=1;$("pPlus").disabled=persons>=9;
-    var show=persons>=2&&lastCost>0;$("perBox").hidden=!show;
-    if(show)$("perV").textContent=fmt(lastCost/persons,2)+" €";
-    $("paxNote").hidden=persons<2;if(persons>=2)$("paxNote").textContent="Spotreba zvýšená o "+fmt((persons-1)*PAX,2)+" l/100 km za váhu "+(persons-1)+(persons-1===1?" spolujazdca":" spolujazdcov");
+    $("brk").hidden=!(mode==="trip"&&taxi&&lastCost>0);
+    $("pLbl").textContent=taxi?"Počet pasažierov":"Počet osôb";
+    $("pPlus").setAttribute("aria-label",taxi?"Viac pasažierov":"Viac osôb");$("pMinus").setAttribute("aria-label",taxi?"Menej pasažierov":"Menej osôb");
+    $("pCount").textContent=persons;$("pMinus").disabled=persons<=1;$("pPlus").disabled=persons>=(taxi?8:9);
+    $("perK").textContent=taxi?"na pasažiera":"na osobu";
+    var show=lastCost>0&&(taxi||persons>=2);$("perBox").hidden=!show;
+    if(show)$("perV").textContent=taxi?fmt(perTaxi(),2)+" €":fmt(lastCost/persons,2)+" €";
+    var extra=taxi?persons:persons-1;
+    $("paxNote").hidden=extra<1;
+    if(extra>=1)$("paxNote").textContent="Spotreba zvýšená o "+fmt(extra*PAX,2)+" l/100 km za váhu "+extra+(taxi?(extra===1?" pasažiera":" pasažierov"):(extra===1?" spolujazdca":" spolujazdcov"));
   }
-  $("pPlus").addEventListener("click",function(){if(persons<9){persons++;calc();renderSplit()}});
+  $("taxi").addEventListener("change",function(){$("taxiBox").hidden=!isTaxi();persons=1;calc();renderSplit()});
+  ["tMin"].concat(rateIds).forEach(function(i){$(i).addEventListener("input",function(){saveRates();calc()})});
+  $("pPlus").addEventListener("click",function(){if(persons<(isTaxi()?8:9)){persons++;calc();renderSplit()}});
   $("pMinus").addEventListener("click",function(){if(persons>1){persons--;calc();renderSplit()}});
   function out(a,b,c,d,e){if(a==="–"){lastCost=null;renderSplit()}$("o1").textContent=a;$("o2").textContent=b;$("o3").textContent=c;$("o4").textContent=d;$("o5").textContent=e}
   function showErr(m){$("err").textContent=m;$("err").hidden=!m}
@@ -499,10 +568,24 @@ footer{font-size:.78rem;color:var(--muted);line-height:1.45;padding:0 4px}
       showErr("");
       if($("back").checked)km*=2;
       if($("winter").checked)co*=1.10;
-      co+=(persons-1)*PAX;   // každý spolujazdec ~80 kg navyše (ADAC: max. +0,3 l/100 km na 100 kg)
-      var l=km*co/100,cost=l*pr;
+      var taxi=isTaxi();
+      co+=(taxi?persons:persons-1)*PAX;   // každá osoba okrem šoféra ~80 kg navyše (ADAC: max. +0,3 l/100 km na 100 kg)
+      var l=km*co/100,cost=l*pr,fuel=cost;
+      var trip={km:km,l:l,co:co,pr:pr,back:$("back").checked,winter:$("winter").checked,taxi:taxi,fuel:fuel};
+      if(taxi){
+        var auto=Math.round(km),mIn=num($("tMin").value),min=$("tMin").value.trim()&&mIn>=0?mIn:auto;
+        $("tMin").placeholder="~"+auto;
+        var rw=num($("rWear").value),rt=num($("rTime").value),rb=num($("rBoard").value);
+        rw=rw>=0?rw:0;rt=rt>=0?rt:0;rb=rb>=0?rb:0;
+        trip.min=min;trip.wear=km*rw;trip.time=min*rt;trip.board=persons*rb;
+        cost=fuel+trip.wear+trip.time+trip.board;
+        $("bFuel").textContent=fmt(fuel,2)+" €";$("bWear").textContent=fmt(trip.wear,2)+" €";
+        $("bTimeK").textContent="Môj čas ("+fmt(min,0)+" min)";$("bTime").textContent=fmt(trip.time,2)+" €";
+        $("bBoardRow").hidden=!(trip.board>0);$("bBoard").textContent=fmt(trip.board,2)+" €";
+        $("k2").textContent="Cena odvozu";
+      }
       out(fmt(l,2)+" l",fmt(cost,2)+" €",fmt(cost/km,3)+" €",fmt(co*pr,2)+" €",Math.round(TANK/co*100)+" km");
-      lastCost=cost;lastTrip={km:km,l:l,co:co,pr:pr,back:$("back").checked,winter:$("winter").checked};$("copyTxt").hidden=true;renderSplit();
+      lastCost=cost;lastTrip=trip;$("copyTxt").hidden=true;renderSplit();
     }else{
       $("k1").textContent="Tvoja spotreba (l/100 km)";$("k2").textContent="Zaplatené";$("k3").textContent="Cena za 1 km";$("k4").textContent="Cena na 100 km";
       var rkm=num($("rkm").value),rl=num($("rl").value),rp=num($("rprice").value);

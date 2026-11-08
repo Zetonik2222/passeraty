@@ -1,5 +1,5 @@
 /* Passeraty – offline režim. Pri zmene súborov zvýš číslo verzie. */
-var CACHE = "passeraty-v1";
+var CACHE = "passeraty-v2";
 var CORE = ["./", "index.html", "storage.js", "app-extra.js", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", function (e) {
